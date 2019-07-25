@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Cornac - Preferred.AI</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/stylish.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="/static/js/base.js"></script>
+
+  <script>
+    var display = "{{display}}";
+  </script>
+
+</head>
+
+
+<body>
+    <!-- ###################  TOP BAR  ################### -->    
+    <div class="jumbotron">
+        <h1 class="site-title">
+            <a id="logo" href="https://preferred.ai/" target="_blank">
+                PREFERRED.AI
+            </a>
+        </h1>
+        <div id="web-title" class="text-center">
+            <h1><strong>Cornac User Interface</strong></h1>
+            <span>Train your own models with your dataset input!</span> 
+        </div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand text-success" href="https://cornac.preferred.ai/" target="_blank"><strong>Cornac</strong></a>
+        <ul class="nav navbar-nav collapse navbar-collapse">
+            <li class="nav-item">
+                <a class="nav-link p-3" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('run_model', parameter = 'pmf') }}">
+                    <button class="btn btn-md btn-success">Get Started</button>
+                </a>
+            </li>
+        </ul>
+        
+        {% if current_user.username %}
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><strong>{{current_user.username}}</strong></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a>
+                    <a class="dropdown-item" href="{{ url_for('past_results') }}">Results</a>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}"><strong>Logout</strong></a>
+            </li>
+        </ul>
+        {% endif %}
+    </nav>
+    <!-- ###################|  TOP BAR  |################### -->
+
+
+    <!-- ###################  FORM  ################### -->
+    <form action="" id="user_form" class="form-inline" method="POST" enctype="multipart/form-data">
+
+    <div class="container" id="formToggles">
+
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header">
+                    <a class="card-link text-danger" data-toggle="collapse" href="#model">
+                        <h4 style="display:inline">{% block model_name %}{% endblock %} Parameters</h4>
+                    </a>
+                    <div class="dropdown float-right">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                                <b>Select Model</b>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/train/pmf">PMF</a>
+                                <a class="dropdown-item" href="/train/mf">MF</a>
+                                <a class="dropdown-item" href="/train/bpr">BPR</a>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="model" class="collapse show border" data-parent="#accordion">
+            <div id="parameter" class="card-body justify-content-center d-flex">
+
+                <!-- EXTEND THE MODEL'S PARAMETER EXTERNAL SCRIPT HERE -->
+                {% block content %}{% endblock %}
+
+                
+            </div>                
+        </div>
+        <!-- <div class="container" style="margin: 0 auto; width: 100px">
+            <button id="round-button">+</button>
+        </div> -->
+
+        <!-- ################### EVALUATION METHOD ################### -->
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header">
+                    <a class="card-link text-danger" data-toggle="collapse" href="#evalmethod">
+                        <h4>Evaluation Method</h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="evalmethod" class="collapse show border" data-parent="#accordion">
+            <div class="card-body justify-content-center d-flex">
+                <label class="radio-inline mr-sm-4"><input type="radio" name="evalmethod" value="ratio_split" checked>Ratio Split</label>
+                <label class="radio-inline mr-sm-4"><input type="radio" name="evalmethod" value="cross_validation">Cross Validation</label>
+            </div>
+        </div>
+
+        <!-- ################### METRICS ################### -->
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header">
+                    <a class="card-link text-danger" data-toggle="collapse" href="#metrics">
+                        <h4>Metrics</h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="metrics" class="collapse show border" data-parent="#accordion">
+            <div class="card-body justify-content-center d-flex">
+                <div class="form-check-inline mr-sm-4">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="metrics" class="form-check-input" value="mae">MAE
+                    </label>
+                </div>
+                <div class="form-check-inline mr-sm-4"> 
+                    <label class="form-check-label">
+                        <input type="checkbox" name="metrics" class="form-check-input" value="rmse">RMSE
+                    </label>
+                </div>
+                <div class="form-check-inline mr-sm-4">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="metrics" class="form-check-input" value="recall">Recall
+                    </label>
+                </div>
+                <div class="form-check-inline mr-sm-4">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="metrics" class="form-check-input" value="precision">Precision
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ################### FILES INPUT ################### -->
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header">
+                    <a class="card-link text-danger" data-toggle="collapse" href="#files">
+                        <h4>Files Input</h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="files" class="collapse show border" data-parent="#accordion">
+            <div class="d-flex justify-content-center">
+                <div class="form-group p-3">
+                    <label class="text-primary">Dataset:</label>
+                    <input type="file" class="form-control-file border" name="dataset" required>
+                </div>
+                
+                <div class="form-group p-3">
+                    <label class="text-primary">Metadata:</label>
+                    <input type="file" class="form-control-file border" name="metadata" required>
+                </div>
+            </div>
+        </div>
+
+        <div id="warnings" class="alert alert-danger" style="display:none">
+            <!-- <button type="button" class="close float-right mr-sm-4" data-dismiss="alert">&times;</button> -->
+            <h5><strong>Warning!</strong></h5>
+
+            <ul id="flask_errors">
+
+            </ul>
+        </div>
+    
+    <br>
+    </form>
+
+    <button id="get_result" class="btn btn-secondary btn-lg btn-block">Train Model</button>
+    </div> <!-- formToggle -->
+
+    <!-- ###################|  FORM  |################### -->
+
+    <br>
+
+    <!-- ###################  USER CHECK  ###################-->
+    <div id="user_check" class="container border"style="display:none">
+
+        <div class="container p-3">
+            <h4>Model Results</h4>
+            <table id="result_table" class="table table-striped table-bordered text-center">
+
+            </table>
+        </div>
+
+        <div class="container">
+
+            <h4>Check User Recommendations</h4>
+
+                <form id="reco_form" action="">
+                    <div class="form-group">
+                        <label for="user">User ID</label>
+                        <input type="text" class="form-control" name="user" placeholder="Enter a user ID to check">
+                    </div>
+                </form>
+                <button id="user_check_btn" type="button" class="btn btn-primary btn-lg">Check User</button>
+            
+            <div class="container">
+                <p id="ranking"></p>
+                <p id="scores"></p>
+            </div>
+
+        </div>
+        
+    </div>
+    <!-- ###################|  USER CHECK  |###################-->
+
+    <!-- ###################  SCREEN OVERLAY  ################### -->
+
+    <div class="overlay" id="model_load">
+        <div class="overlay-content">
+            <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <p>Please do not exit the page while your model is being trained ...</p>
+        </div>
+
+    </div>
+
+
+
+
+    <!-- ###################|  SCREEN OVERLAY  |###################-->
+</body>
+</html>

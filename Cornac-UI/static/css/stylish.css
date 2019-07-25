@@ -1,0 +1,199 @@
+body {
+    overflow:scroll;
+    height:auto;
+}
+
+#loader {
+    display: none;
+    width: 69px;
+    height: 89px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 2px;
+}
+
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Set a style for all buttons
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+} */
+
+
+
+/******* CONFIRMED TEMPLATE *******/
+
+button:hover {  
+  opacity: 0.8;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.container {
+  padding: 16px;
+}
+
+
+.jumbotron {
+  padding: 0px 0px;
+  padding-bottom: 30px;
+  margin: 0px;
+  background-color: #e9ecef;
+}
+
+.site-title {
+  padding: 10px 0px;
+  font-size: 18px
+}
+
+#web-title {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+#logo {
+  padding: 15px;
+  background-color: #BD1818;
+  font-family: Roboto, Arial, sans-serif; 
+  color: white;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+#round-button {
+  display:block;
+  width:40px;
+  height:40px;
+  border: 2px solid #f5f5f5;
+  border-radius: 50%;
+  color:#f5f5f5;
+  text-align:center;
+  text-decoration:none;
+  background: #5a6268;
+  box-shadow: 0 0 3px gray;
+  font-size:25px;
+  font-weight:bold;
+}
+
+.overlay {
+  height: 0%;
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0, 0.9);
+  overflow-x: hidden;
+  transition: 0.3s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 40%;
+  width: 100%;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 30px;
+  color: white;
+}
+
+.lds-grid {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-grid div {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  animation: lds-grid 1.2s linear infinite;
+}
+.lds-grid div:nth-child(1) {
+  top: 6px;
+  left: 6px;
+  animation-delay: 0s;
+}
+.lds-grid div:nth-child(2) {
+  top: 6px;
+  left: 26px;
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(3) {
+  top: 6px;
+  left: 45px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(4) {
+  top: 26px;
+  left: 6px;
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(5) {
+  top: 26px;
+  left: 26px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(6) {
+  top: 26px;
+  left: 45px;
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(7) {
+  top: 45px;
+  left: 6px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(8) {
+  top: 45px;
+  left: 26px;
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(9) {
+  top: 45px;
+  left: 45px;
+  animation-delay: -1.6s;
+}
+@keyframes lds-grid {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* font-family: "Roboto","Helvetica","Arial",sans-serif; */
+
+/* @media screen and (max-height: 450px) {
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+  font-size: 40px;
+  top: 15px;
+  right: 35px;
+  }
+} */
+
+
+

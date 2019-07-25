@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Cornac - Preferred.AI</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/stylish.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+    <!-- ###################  TOP BAR  ################### -->    
+    <div class="jumbotron">
+        <h1 class="site-title">
+            <a id="logo" href="https://preferred.ai/" target="_blank">
+                PREFERRED.AI
+            </a>
+        </h1>
+        <div id="web-title" class="text-center">
+            <h1><strong>Cornac User Interface</strong></h1>
+            <span>Train your own models with your dataset input!</span> 
+        </div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand text-success" href="https://cornac.preferred.ai/" target="_blank"><strong>Cornac</strong></a>
+        <ul class="nav navbar-nav collapse navbar-collapse">
+            <li class="nav-item">
+                <a class="nav-link p-3" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('run_model', parameter = 'pmf') }}">
+                    <button class="btn btn-md btn-success">Get Started</button>
+                </a>
+            </li>
+        </ul>
+        
+        {% if current_user.username %}
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><strong>{{current_user.username}}</strong></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a>
+                    <a class="dropdown-item" href="{{ url_for('past_results') }}">Results</a>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}"><strong>Logout</strong></a>
+            </li>
+        </ul>
+        {% endif %}
+    </nav>
+    <!-- ###################|  TOP BAR  |################### -->
+        
+        
+        <div class="container" style="background-color:#f1f1f1">
+            <h2>Sign Up Form</h2>
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close float-left mr-sm-4" data-dismiss="alert">&times;</button>
+                <strong>{{ message }}</strong>
+            </div>
+            {% endfor %} 
+            <form method=POST>
+            <div class="container">
+                <div class="form-group">
+                    <b>{{ form.username.label }}</b>
+                    {{ form.username(placeholder="Enter username") }}
+                </div>
+                {% if form.errors %}
+                <ul class="errors">
+                  {% for error in form.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+                {% endif %}
+
+                <div class="form-group">
+                    <b>{{ form.password.label }}</b>
+                    {{ form.password(placeholder="Enter password") }}
+                </div>
+
+                {% if form.password.errors %}
+                <ul class="errors">
+                  {% for error in form.password.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+                {% endif %}
+                
+                <div class="form-group">
+                    <b>{{ form.confirm.label }}</b>
+                    {{ form.confirm(placeholder="Confirm your password") }}
+                </div>
+
+                {% if form.confirm.errors %}
+                <ul class="errors">
+                    {% for error in form.confirm.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+                {% endif %}
+                    
+                {% if form.errors %}
+                    <p>{{errors}}</p>
+                {% endif %}
+                <button class="btn btn-primary btn-lg btn-block"type="submit">Register</button>
+            </div>
+            </form>
+        </div>
+
+
+
+
+
+    </body>
+</html>
