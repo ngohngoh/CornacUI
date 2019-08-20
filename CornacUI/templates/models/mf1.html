@@ -1,0 +1,57 @@
+<div id="accordion">
+    <div class="card">
+        <div class="card-header">
+            <a class="card-link text-success" data-toggle="collapse" href="#model">
+                <h4 style="display:inline">Matrix Factorization Parameters</h4>
+            </a>
+            <div class="dropdown float-right">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                        <b>Select Model</b>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/train/pmf">PMF</a>
+                        <a class="dropdown-item" href="/train/mf">MF</a>
+                        <a class="dropdown-item" href="/train/bpr">BPR</a>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="model" class="collapse show border" data-parent="#accordion">
+    <div id="parameter" class="card-body justify-content-center d-flex">
+
+<div class="form-group p-3">
+    <label class="mr-sm-2" for="iteration">No. of iterations</label>
+    <select class='form-control' name="iteration">
+        <option value="20">20</option>
+        <option value="50">50</option>
+    </select>
+</div>
+
+<div class="form-group p-3">
+    <label class="mr-sm-2" for="lf">Latent Factor</label>
+    <select class='form-control' name="lf">
+        <option value="5">5</option>
+        <option value="10">10</option>
+    </select>
+</div>
+
+<div class="form-group p-3">
+    <label class="mr-sm-2" for="lr">Learning Rate</label>
+    <select class='form-control' name="lr">
+        <option value="0.01">0.01</option>
+        <option value="0.02">0.02</option>
+    </select>
+</div>
+
+<div class="form-group p-3">
+    <label class="mr-sm-2" for="rp">Regularization Parameter</label>
+    <select class='form-control' name="rp">
+        <option value="0.001">0.001</option>
+        <option value="0.002">0.002</option>
+    </select>
+</div>
+</div>                
+</div>

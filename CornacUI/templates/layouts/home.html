@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Cornac - Preferred.AI</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/stylish.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+        
+    </head>
+
+<body>
+    <!-- ###################  TOP BAR  ################### -->    
+    <div class="jumbotron">
+        <h1 class="site-title">
+            <a id="logo" href="https://preferred.ai/" target="_blank">
+                PREFERRED.AI
+            </a>
+        </h1>
+        <div id="web-title" class="text-center">
+            <h1><strong>CornacUI</strong></h1>
+            <p>A web interface for quick experimentation with recommender systems</p> 
+        </div>
+
+    </div>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand text-success" href="https://cornac.preferred.ai/" target="_blank"><strong>Cornac</strong></a>
+        <ul class="nav navbar-nav collapse navbar-collapse">
+            <li class="nav-item">
+                <a class="nav-link p-3" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('main_bp.run_model', parameter = 'pmf') }}">
+                    <button class="btn btn-md btn-success">Get Started</button>
+                </a>
+            </li>
+        </ul>
+        
+        {% if current_user.username %}
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><strong>{{current_user.username}}</strong></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ url_for('auth_bp.profile') }}">Profile</a>
+                    <a class="dropdown-item" href="{{ url_for('main_bp.past_results') }}">Results</a>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth_bp.logout') }}"><strong>Logout</strong></a>
+            </li>
+        </ul>
+        {% endif %}
+    </nav>
+    <!-- ###################|  TOP BAR  |################### -->
+    
+
+    <div class="container p-3">
+        <h1>Welcome, <strong>{{current_user.username}}!</strong></h1>
+        <div class="container border">
+            <h2 class="text-primary"><strong>User Guide</strong></h2>
+            <h6 class="tab"><b>Quick links: </b>
+                <a href="#cornac">Cornac</a> | 
+                <a href="#recommender">Recommender System</a> |
+                <a href="#getstart">Getting Started</a> |
+                <a href="#saved_results">Saved Results</a>
+            </h6>
+            <div class="container">
+                <h3 id="cornac"><strong>What is Cornac?</strong></h3>
+                <p>
+                    <a href="https://github.com/PreferredAI/cornac"><u>Cornac</u></a> is a comparative framework for <strong>multimodal Recommender Systems.</strong> It 
+                    focuses on making it convenient to work with models leveraging auxiliary data (e.g., item descriptive text and image, social network, etc). 
+                    Cornac enables fast experiments and straightforward implementations of new models. It is highly compatible with existing machine learning libraries (e.g. TensorFlow, PyTorch).
+                </p>
+                <br>
+                <h3 id="recommender"><strong>What is a Recommender System?</strong></h3>
+                <p>
+                    <strong>Recommender System </strong>consists of a series of algorithms which predicts users' preferences. Just like any e-commerce website or video-streaming sites such as Lazada, Shopee and Netflix, 
+                    every user has product preferences. These are based on the products they have interacted with and from that, the model would be able to capture this 
+                    data and output a list of recommended products which would be best suited to the user's preference. 
+                </p>
+                <br>
+                <h3 id="getstart"><strong>Getting Started</strong></h3>
+                <p>
+                    <b>Selecting model:</b> <br>
+                    Choosing the <u>right model</u> for you to work on. Parameters will be given for you to select.
+                    <br>
+                    <ul style="font-size:18px">
+                        <li>Probabilitic Matrix Factorization (<a href="https://cornac.readthedocs.io/en/latest/models.html#module-cornac.models.pmf.recom_pmf" target="_blank"><u>PMF</u></a>)</li>
+                        <li>Matrix Factorization (<a href="https://cornac.readthedocs.io/en/latest/models.html#module-cornac.models.mf.recom_mf" target="_blank"><u>MF</u></a>)</li>
+                        <li>Bayesian Personalized Ranking (<a href="https://cornac.readthedocs.io/en/latest/models.html#bayesian-personalized-ranking-bpr" target="_blank"><u>BPR</u></a>)</li>
+                    </ul>
+                </p>
+                <p>
+                    <b>Selecting evaluation method:</b>
+                    You can refer to the documentation <a href="https://cornac.readthedocs.io/en/latest/eval_methods.html"><u>here</u></a> for a better understanding of the different
+                    evaluation methods we have provided to train your model.
+                </p>
+                <p>
+                    <b>Selecting metrics:</b><br>
+                    Choosing the <u>right metrics</u> on how you would like to see the results of your trained model. 
+                    <br>
+                    <ul style="font-size:18px">
+                        <li>Mean Absolute Error (<a href="https://cornac.readthedocs.io/en/latest/metrics.html#mean-absolute-error-mae"><u>MAE</u></a>)</li>
+                        <li>Root Mean Squared Error (<a href="https://cornac.readthedocs.io/en/latest/metrics.html#root-mean-squared-error-rmse"><u>RMSE</u></a>)</li>
+                        <li><a href="https://cornac.readthedocs.io/en/latest/metrics.html#recall"><u>Recall</u></a></li>
+                        <li><a href="https://cornac.readthedocs.io/en/latest/metrics.html#recall"><u>Precision</u></a></li>
+                    </ul>
+                </p>
+                <p>
+                    <b>Input data:</b><br>
+                    Cornac only allows a specific formatting of the dataset and meta data given to it.
+                    <p>
+                        <ul style="font-size:18px">
+                            <li><b>Dataset</b> - Cornac takes in dataset with a column formatting of <b>UIR</b> <i>(User ID, Item ID, Rating)</i></li>
+                            <li><b>Meta Data</b> - Cornac takes in meta data with two columns <i>(Item ID, Item name)</i></li>
+                        </ul>
+                    </p>
+                </p>
+                <br>
+                <h3 id="saved_results"><strong>Saved Results</strong></h3>
+                <p>
+                    <p>
+                        <b>Cornac-UI</b> is able to store a history of your runs which enables you to retrieve and compare your past results. You are able
+                        to look at your parameters input and changed it accordingly to get a better result. 
+                    </p>
+
+                    <p>
+                        The trained model of each run would be saved in a Pickle File and available for you to <b>download</b> if 
+                        you would like to retrieve it and use on your own application. 
+                    </p>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
