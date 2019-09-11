@@ -6,10 +6,10 @@ Cornac-UI is an user interface built on top of [Cornac](https://github.com/Prefe
 Before running this application, [Cornac](https://github.com/PreferredAI/cornac) has to be installed first.
 
 
-### For Cornac-UI
-  - **From Flask:**
+### For Cornac-UI Dependencies
+  - **From repo:**
 ```sh
-pip install Flask
+pip install -r requirements.txt
 ```
 
 ## Getting started with Cornac-UI (on localhost)
@@ -25,7 +25,7 @@ pip install Flask
   - currently there is only 3 models: [PMF](https://github.com/PreferredAI/cornac/tree/master/cornac/models/pmf), [MF](https://github.com/PreferredAI/cornac/tree/master/cornac/models/mf) and [BPR](https://github.com/PreferredAI/cornac/tree/master/cornac/models/bpr)
   - more models will be extended to Cornac-UI in the near future 
   - **[Developer] adding in more models are relatively simple where you just have to create a HTML template for a form input parameter and also adding the relevant model function parameters into app.py**
-4) By submitting the input parameters, it will take a short moment for the model to be trained (depending on your data size) and an output which looks like this:
+4) By submitting the input parameters, it will take a short moment for the model to be trained (depending on your data size) and an output which looks like this under the result tab:
 
 |     |    MAE |   RMSE | Recall@20 | NDCG@20 |    AUC | Train (s) | Test (s) |
 | --- | -----: | -----: | --------: | ------: | -----: | --------: | -------: |
