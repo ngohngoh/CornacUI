@@ -5,28 +5,6 @@ Cornac-UI is an user interface built on top of [Cornac](https://github.com/Prefe
 ## Installation
 Before running this application, [Cornac](https://github.com/PreferredAI/cornac) has to be installed first.
 
-### For Cornac
-
-  - **From PyPI (you may need a C++ compiler):**
-
-```sh
-pip3 install cornac
-```
-
-  - **From Anaconda:**
-
-```sh
-conda install cornac -c conda-forge
-```
-
-  - **From the GitHub source (for latest updates):**
-
-```sh
-pip3 install Cython
-git clone https://github.com/PreferredAI/cornac.git
-cd cornac
-python3 setup.py install
-```
 
 ### For Cornac-UI
   - **From Flask:**
