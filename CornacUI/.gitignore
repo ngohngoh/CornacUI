@@ -1,0 +1,11 @@
+__pycache__/
+/env
+
+!/uploads/
+/uploads/*
+!/uploads/dataset/
+/uploads/dataset/*
+
+/.vscode/
+
+/accounts.sqlite3

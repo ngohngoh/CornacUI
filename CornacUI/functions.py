@@ -102,11 +102,12 @@ def select_metrics(metrics, inputParam):
 
 # CHECKING OF FOLDER EXISTENCE
 def check_folder(path):
+    # New user
     runs = os.listdir(path)
-    print("runs:", runs)
     if len(runs) == 1:
         return 1
     
+    # Old User
     runs.remove("user_results.pkl") 
     num = [int(run) for run in runs]
     return max(num) + 1

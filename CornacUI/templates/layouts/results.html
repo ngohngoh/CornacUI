@@ -23,9 +23,7 @@
     <!-- ###################  TOP BAR  ################### -->    
     <div class="jumbotron">
         <h1 class="site-title">
-            <a id="logo" href="https://preferred.ai/" target="_blank">
-                PREFERRED.AI
-            </a>
+            <img src="/static/images/preferred_logo.png" style="max-width:160px">
         </h1>
         <div id="web-title" class="text-center">
             <h1><strong>CornacUI</strong></h1>
@@ -78,55 +76,64 @@
             </thead>
             {% for run, result in user_results.items() %}
             <tr>
-                {% set parameters = result["parameter"] %}
-                {% set output = result["output"] %}
-                <td>{{ run }}</td>
-                
-                <td>
-                    <table class="table table-sm table-striped">
-                    <tr>
-                    {% for data in output[0] %}
-                        <th>{{data}}</th>
-                    {% endfor %}
-                    </tr>
+                {% if result is mapping %}
+                    {% set parameters = result["parameter"] %}
+                    {% set output = result["output"] %}
+                    <td>{{ run }}</td>
                     
-                    {% for row in output[1:] %}
-                    <tr>
-                        {% for data in row %}
-                            <td>{{data}}</td>
+                    <td>
+                        <table class="table table-sm table-striped">
+                        <tr>
+                        {% for data in output[0] %}
+                            <th>{{data}}</th>
                         {% endfor %}
-                    </tr>    
-                    {% endfor %}
-                    
-                    </table>
-                </td>
+                        </tr>
+                        
+                        {% for row in output[1:] %}
+                        <tr>
+                            {% for data in row %}
+                                <td>{{data}}</td>
+                            {% endfor %}
+                        </tr>    
+                        {% endfor %}
+                        
+                        </table>
+                    </td>
 
-                <td>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                            Parameters
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right p-2">
-                            <table class="table-sm text-center thead-light">
-                                <tr>
-                                    {% for header in parameters %}
-                                        <th>{{ header }}</th>
-                                    {% endfor %}
-                                </tr>
-                                <tr>
-                                    {% for header in parameters %}
-                                        <td>{{ parameters[header] }}</td>
-                                    {% endfor %}
-                                </tr>
-                            </table>
+                    <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                                Parameters
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right p-2">
+                                <table class="table-sm text-center thead-light">
+                                    <tr>
+                                        {% for header in parameters %}
+                                            <th>{{ header }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        {% for header in parameters %}
+                                            <td>{{ parameters[header] }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <a href="{{ url_for('main_bp.download', run = run) }}">
-                        <button class="btn btn-info">Download</button>
-                    </a>
-                </td>
+                        <a href="{{ url_for('main_bp.download', run = run) }}">
+                            <button class="btn btn-info">Download</button>
+                        </a>
+                    </td>
+                {% else %}
 
-            </tr>   
+                    <td>{{ run }}</td>
+
+                    <td id="queue_result">{{ result }}</td>
+
+                    <td></td>
+                    
+                {% endif %}
+                </tr>   
             {% endfor %}
         </table>
         {% else %}

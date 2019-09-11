@@ -10,7 +10,6 @@ from models import *
 
 login_manager = LoginManager()
 
-bye = "world"
 auth_bp = Blueprint('auth_bp', __name__, template_folder="templates", 
                     static_folder="static")
 
@@ -18,54 +17,55 @@ auth_bp = Blueprint('auth_bp', __name__, template_folder="templates",
 # LOGIN PAGE
 @auth_bp.route("/", methods=["GET", "POST"])
 def login():
-    login_form = LoginForm(request.form)
-    if request.method == "POST":
-        if login_form.validate():
-            print("checking")
-            username = request.form.get("username")
-            password = request.form.get("password")
-            user = User.query.filter_by(username=username).first()
-            if user:
-                print("checking password")
-                if user.check_password(password = password):
-                    login_user(user)
-                    print("Logging in...")
-                    next = request.args.get("next")
-                    print("next:", next)
-                    return redirect(next or url_for("main_bp.home")) 
-        flash("Username/password is incorrect. Please try again!")
-    return render_template("layouts/login.html", form=LoginForm())
+    try:
+        user = current_user.username
+        return redirect(url_for('main_bp.home'))
+    except:
+        login_form = LoginForm(request.form)
+        if request.method == "POST":
+            if login_form.validate():
+                username = request.form.get("username")
+                password = request.form.get("password")
+                user = User.query.filter_by(username=username).first()
+                if user:
+                    if user.check_password(password = password):
+                        login_user(user)
+                        next = request.args.get("next")
+                        return redirect(next or url_for("main_bp.home")) 
+            flash("Username/password is incorrect. Please try again!")
+        return render_template("layouts/login.html", form=LoginForm())
 
 
 # SIGN UP PAGE
 @auth_bp.route("/signup", methods=["GET", "POST"])
 def signup():
-    signup_form = SignupForm(request.form)
-    if request.method=="POST":
-        if signup_form.validate():
-            print("Validating...")
-            username = request.form.get("username")
-            password = request.form.get("password")
-            existing_user = User.query.filter_by(username=username).first()
-            if existing_user == None:
-                user = User()
-                user = User(username=username, password=password)
-                db.session.add(user)
-                db.session.commit()
-                print("new user added")
-                path = "uploads/" + user.username
-                user_results = os.path.join(path, "user_results.pkl")
-                if not os.path.exists(path):
-                    print("created db")
-                    os.makedirs(path)
-                    open(user_results, "x")
-                login_user(user)
-                return redirect(url_for("main_bp.home"))
+    try:
+        user = current_user.username
+        return redirect(url_for('main_bp.home'))
+    except:
+        signup_form = SignupForm(request.form)
+        if request.method=="POST":
+            if signup_form.validate():
+                username = request.form.get("username")
+                password = request.form.get("password")
+                existing_user = User.query.filter_by(username=username).first()
+                if existing_user == None:
+                    user = User()
+                    user = User(username=username, password=password)
+                    db.session.add(user)
+                    db.session.commit()
+                    path = "uploads/" + user.username
+                    user_results = os.path.join(path, "user_results.pkl")
+                    if not os.path.exists(path):
+                        os.makedirs(path)
+                        open(user_results, "x")
+                    login_user(user)
+                    return redirect(url_for("main_bp.home"))
+                else:
+                    flash("Username has been taken!")
             else:
-                flash("Username has been taken!")
-        else:
-            flash("Invalid fields provided")
-    return render_template("layouts/signup.html", form=SignupForm())
+                flash("Invalid fields provided")
+        return render_template("layouts/signup.html", form=SignupForm())
 
 
 # PROFILE PAGE
@@ -79,7 +79,6 @@ def profile():
         new_password = request.form.get("password")
         confirm = request.form.get("confirm")
         if new_password == confirm:
-            print("changing password")
             user.password = new_password
             db.session.commit()
             flash("Password has been changed!")

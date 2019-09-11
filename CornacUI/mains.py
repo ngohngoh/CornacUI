@@ -14,31 +14,97 @@ from functions import upload, allowed_file, user_input, read_data, \
                         select_eval, select_metrics, select_model,  \
                         check_folder
 
-hello = "yi long"
 main_bp = Blueprint('main_bp', __name__, template_folder="templates", 
                     static_folder="static")
 
-
-import redis
 from rq import Queue
-r = redis.Redis()
-q = Queue(connection=r)
+from rq.job import Job
+from worker import conn
 
+q = Queue(connection=conn)
 
-def background_task():
-    print("Working on task now!")
-    return 1
+def run_task(task_input):
 
+    inputParam, username, current_run = task_input
+    user_folder = "uploads/" + username
+    run_folder = os.path.join(user_folder, str(current_run))
+
+    try: 
+        # Reading of Dataset and Metadata
+        pathData = os.path.abspath("uploads/dataset/" + inputParam['data_file'])
+        dataset = read_data(pathData)
+        # pathMeta = cache(url = os.path.abspath("uploads/metadata/" + inputParam["meta_file"]))
+        # metadata = read_meta(pathMeta)
+
+        # Using Cornac
+        eval_method = select_eval(inputParam["evalmethod"], dataset)
+        model = select_model(inputParam)
+        metrics = select_metrics(inputParam["metrics"], inputParam)
+
+        exp = cornac.Experiment(eval_method=eval_method,
+                                models=[model],
+                                metrics=metrics,
+                                user_based=True)
+        exp.run()
+        exp_result = str(exp.result)
+        result = exp_result.split("\n")
+
+        # Splitting the output 
+        output = []
+        for line in result:
+            if '|' in line:
+                store = []
+                for data in line.split('|'):
+                    store.append(data)
+                output.append(store)
+
+        # Creating the run folder
+        os.makedirs(run_folder)
+
+        # Saving the trained model
+        model_file = "trained_model.pkl"
+        model_path = os.path.join(run_folder, model_file)
+        f = open(model_path, "wb")
+        pickle.dump(model, f)
+        f.close()
+
+        # Saving the run results
+        results_path = user_folder + "/user_results.pkl"
+        run_result = {}     
+        run_result["parameter"] = inputParam
+        run_result["output"] = output
+        result_dict = {current_run: run_result}
+
+        f = open(results_path, "rb")
+        user_results = pickle.load(f) 
+        user_results.update(result_dict)
+        f.close() 
+
+        f = open(results_path, "wb")
+        pickle.dump(user_results, f)  
+        f.close()   
+
+        print("Task completed!") 
+
+    except:
+        results_path = user_folder + "/user_results.pkl"   
+        result_dict = {current_run: "Training error! Try again..."}
+        f = open(results_path, "rb")
+        user_results = pickle.load(f) 
+        user_results.update(result_dict)
+        f.close() 
+
+        f = open(results_path, "wb")
+        pickle.dump(user_results, f)  
+        f.close()  
+
+        print("Training Error!")
 
 
 # HOME PAGE
 @main_bp.route('/home', methods=["GET"])
 @login_required
 def home():
-    # all_users = User.query.all()
-    # print(all_users)
-    # user = User.query.filter_by(username="").first()
-    # print(user.password)
     return render_template("layouts/home.html")
 
 # USER PAGE
@@ -50,10 +116,11 @@ def run_model(parameter):
         return render_template("models/{}.html".format(parameter), display=parameter)
 
     else: 
+        user = current_user.username
         form_files = request.files
-        print("form files:", form_files)
         form_data = request.form
-        print("form data:", form_data)
+
+        inputParam = user_input(form_data, form_files)
 
         errors = []
 
@@ -71,68 +138,35 @@ def run_model(parameter):
         if len(errors) > 0: 
             return jsonify({"errors": errors})
 
-        inputParam = user_input(form_data, form_files)
-        print("inputParam:", inputParam)
 
-        job = q.enqueue(background_task)
-        # print(f"Task ({job.id}) added to queue at {job.enqueued_at}")
-        print("Task: ", job.id, job.enqueued_at)
-
-        # Reading of Dataset and Metadata
-        pathData = cache(url = os.path.abspath("uploads/dataset/" + inputParam['data_file']))
-        # pathMeta = cache(url = os.path.abspath("uploads/metadata/" + inputParam["meta_file"]))
-        dataset = read_data(pathData)
-        # metadata = read_meta(pathMeta)
-
-        # Using Cornac
-        eval_method = select_eval(inputParam["evalmethod"], dataset)
-        model = select_model(inputParam)
-        metrics = select_metrics(inputParam["metrics"], inputParam)
-
-        exp10 = cornac.Experiment(eval_method=eval_method,
-                                models=[model],
-                                metrics=metrics,
-                                user_based=True)
-        # print(exp10.run())
-        result = exp10.run().split("\n")
-        
-        # Splitting the output 
-        output = []
-        for line in result[1:-1]:
-            if '|' in line:
-                store = []
-                for data in line.split('|'):
-                    store.append(data)
-                output.append(store)
-
-        # Creating the run folder
-        user_folder = "uploads/" + current_user.username
+        user_folder = "uploads/" + user
         current_run = check_folder(user_folder)
-        run_folder = os.path.join(user_folder, str(current_run))
-        os.makedirs(run_folder)
 
-        # Saving the trained model
-        model_file = "trained_model.pkl"
-        model_path = os.path.join(run_folder, model_file)
-        pickle.dump(model, open(model_path, "wb"))
-
-        # Saving the run results
         results_path = user_folder + "/user_results.pkl"
-        run_result = {}     
-        run_result["parameter"] = inputParam
-        run_result["output"] = output
-        result_dict = {current_run: run_result}
+        result_dict = {current_run: "model training in queue..."}
 
         if os.stat(results_path).st_size > 0: # Old user
-            print("this user has run models before")
-            user_results = pickle.load(open(results_path, "rb")) 
+            f = open(results_path, "rb")
+            user_results = pickle.load(f) 
             user_results.update(result_dict)
-            pickle.dump(user_results, open(results_path, "wb"))  
-        else:                                 # New user
-            print("this user is new")
-            pickle.dump(result_dict, open(results_path, "wb"))        
+            f.close() 
 
-        return jsonify({"output": output, "current_run": current_run})
+            f = open(results_path, "wb")
+            pickle.dump(user_results, f)  
+            f.close()
+        else:                                 # New user
+            f = open(results_path, "wb")
+            pickle.dump(result_dict, f)   
+            f.close() 
+
+
+        # Adding Cornac task into Redis Queue
+        task_input = (inputParam, user, current_run)
+        job = q.enqueue(run_task, task_input)        
+
+        return jsonify({"result": "Task has been submitted to our server..."})
+
+
 
 # USER RESULTS
 @main_bp.route("/results", methods=["GET"])
