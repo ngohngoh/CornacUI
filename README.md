@@ -1,4 +1,4 @@
-# Cornac-UI
+# CornacUI
 
 Cornac-UI is an user interface built on top of [Cornac](https://github.com/PreferredAI/cornac). This application will allow users to work around Cornac without having to understand how the codes run in the backend and yet still able to train their own recommendation model. 
 
